@@ -20,19 +20,19 @@ db.exec(`
 
 function getAllCards(deck) {
   if (deck) {
-    return db.prepare('SELECT * FROM cards WHERE deck = ?').all(deck);
+    return db.prepare('SELECT * FROM cards WHERE deckName = ?').all(deck);
   }
   return db.prepare('SELECT * FROM cards').all();
 }
 
 function getCard(id) {
-  return db.prepare('SELECT * FROM cards WHERE id = ?').get(id);
+  return db.prepare('SELECT * FROM cards WHERE noteid = ?').get(id);
 }
 
 
 
 function createCard(question, answer, deck = 'default') {
-  const stmt = db.prepare('INSERT INTO cards (question, answer, deck) VALUES (?, ?, ?)');
+  const stmt = db.prepare('INSERT INTO cards (question, answer, deckName) VALUES (?, ?, ?)');
   const result = stmt.run(question, answer, deck);
   return getCard(result.lastInsertRowid); 
 }
@@ -40,20 +40,20 @@ function createCard(question, answer, deck = 'default') {
 function updateCard(id, fields) {
 
     
-  const allowed = ['question', 'answer', 'deck', 'known'];
+  const allowed = ['question', 'answer', 'deckName', 'known'];
   const updates = Object.keys(fields).filter(k => allowed.includes(k)); 
   //can't let a request update id or something illegal
   
   if (updates.length === 0) return getCard(id);  
   
-  const sql = `UPDATE cards SET ${updates.map(k => `${k} = ?`).join(', ')} WHERE id = ?`;
+  const sql = `UPDATE cards SET ${updates.map(k => `${k} = ?`).join(', ')} WHERE noteid = ?`;
   const values = [...updates.map(k => fields[k]), id];
   db.prepare(sql).run(...values);
-  return getCard(id);  // return updated card
+  return getCard(id);  
 }
 
 function deleteCard(id) {
-  db.prepare('DELETE FROM cards WHERE id = ?').run(id);
+  db.prepare('DELETE FROM cards WHERE noteid = ?').run(id);
 }
 
 module.exports = { getAllCards, getCard, createCard, updateCard, deleteCard };
