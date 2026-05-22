@@ -1,0 +1,25 @@
+{
+  "name": "flashcards",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dbFunctions.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Faiz-Ul-Hassan92/minimalFlashCards.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Faiz-Ul-Hassan92/minimalFlashCards/issues"
+  },
+  "homepage": "https://github.com/Faiz-Ul-Hassan92/minimalFlashCards#readme",
+  "dependencies": {
+    "better-sqlite3": "^12.10.0"
+  }
+}

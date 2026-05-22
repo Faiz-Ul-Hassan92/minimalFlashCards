@@ -24,6 +24,24 @@ function readBody(req) {
 }
 
 
+//serving static files 
+
+function serveStatic(res, filepath) {
+  const ext = path.extname(filepath);
+  const types = {
+    '.html': 'text/html',
+    '.css':  'text/css',
+    '.js':   'application/javascript',
+  };
+  const contentType = types[ext] || 'text/plain';
+
+  fs.readFile(filepath, (err, data) => {
+    if (err) { res.writeHead(404); res.end('Not found'); return; }
+    res.writeHead(200, { 'Content-Type': contentType });
+    res.end(data);
+  });
+}
+
 
 //server basic routing and functions for this small app
 
@@ -65,7 +83,14 @@ const server = http.createServer(async (req, res) => {
     return sendJSON(res, 200, { deleted: id });
   }
 
-  
+
+  // serve static files from /public for any GET that isn't an API route
+  if (method === 'GET') {
+    const safePath = url === '/' ? '/index.html' : url;
+    const filePath = path.join(__dirname, 'public', safePath);
+    return serveStatic(res, filePath);
+  }
+
   sendJSON(res, 404, { error: 'action not supported yet :)' });
 });
 
