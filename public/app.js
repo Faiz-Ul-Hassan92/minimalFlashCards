@@ -65,18 +65,18 @@ function renderCards(cards) {
       : '';
 
     return `
-      <div class="card-row" data-id="${c.id}">
+      <div class="card-row" data-id="${c.noteid}">
         <div class="card-q">
           ${escHtml(c.question)}
-          <div class="card-deck">${escHtml(c.deck)}</div>
+          <div class="card-deck">${escHtml(c.deckName)}</div>
         </div>
         <div class="card-a">
           ${escHtml(c.answer)}
           ${badgeHTML}
         </div>
         <div class="card-actions">
-          <button onclick="editCard(${c.id})">Edit</button>
-          <button class="del" onclick="deleteCard(${c.id})">Delete</button>
+          <button onclick="editCard(${c.noteid})">Edit</button>
+          <button class="del" onclick="deleteCard(${c.noteid})">Delete</button>
         </div>
       </div>`;
   }).join('');
@@ -97,12 +97,12 @@ function clearForm() {
 }
 
 function editCard(id) {
-  const card = allCards.find(c => c.id === id);
+  const card = allCards.find(c => c.noteid === id);
   if (!card) return;
-  document.getElementById('edit-id').value        = card.id;
+  document.getElementById('edit-id').value        = card.noteid;
   document.getElementById('input-question').value = card.question;
   document.getElementById('input-answer').value   = card.answer;
-  document.getElementById('input-deck').value     = card.deck;
+  document.getElementById('input-deck').value     = card.deckName;
   document.getElementById('form-title').textContent = 'Edit Card';
   showView('form');
 }
@@ -174,7 +174,7 @@ document.getElementById('btn-reveal').addEventListener('click', () => {
 async function quizAdvance(known) {
   const card = quizCards[quizIndex];
   // persist the known flag back to the db
-  await api('PATCH', `/api/cards/${card.id}`, { known: known ? 1 : 2 });
+  await api('PATCH', `/api/cards/${card.noteid}`, { known: known ? 1 : 2 });
 
   if (known) quizKnown++;
   quizIndex++;
